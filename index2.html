@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafePost - Protégez votre contenu</title>
+
+    <meta name="description" content="SafePost vous permet de sauvegarder et organiser vos publications Facebook, Instagram, TikTok et autres réseaux sociaux afin de ne jamais perdre votre contenu.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="SafePost – Sauvegardez vos publications">
+    <meta property="og:description" content="Protégez vos publications avant qu’elles ne disparaissent. SafePost vous aide à sauvegarder et retrouver facilement vos contenus des réseaux sociaux.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://safepost.vercel.app">
+
+    <link rel="icon" href="https://www.svgrepo.com/show/475656/shield-lock.svg" type="image/svg+xml">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" type="image/png">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1E40AF;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --dark: #1F2937;
+            --gray: #6B7280;
+            --light-gray: #F3F4F6;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #FAFAFA;
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.95;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .btn-over-hero {
+           position: relative;
+           z-index: 10;
+           display: flex;
+           justify-content: center;
+           margin-top: -1.5rem; 
+           padding: 0 1.4rem;
+        }
+
+        .link_btn {
+            position: relative; 
+            background: #1F2937;
+            color: white;
+            display: inline-block;
+            padding: 0.80rem 1.2rem;
+            border-radius: 999px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
+            transition: all .3s ease;
+            overflow: hidden;  
+            z-index: 0;
+        }
+
+        .link_btn:hover {
+            color: #2563EB;
+        }
+
+        .link_btn::after {
+            content: "";
+            background: white;
+            color: #2563EB;
+            position: absolute;
+            z-index: -1;
+            left: -20%;
+            right: -20%;
+            top: 0;
+            bottom: 0;
+            transform: skewX(-45deg) scale(0, 1);
+            transition: all 0.5s;
+        }
+
+        .link_btn:hover::after {
+            transform: skewX(-45deg) scaleX(1);
+        }
+
+        .link_btn i {
+            margin-right: 0.6rem;
+        }
+
+        @media(max-width: 768px) {
+            .stats {
+                gap: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <h1>SafePost</h1>
+        <p>Sauvegardez vos publications des réseaux sociaux et protégez votre travail sur le long terme.</p>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="totalPosts">0</span>
+                <span class="stat-label">Publications sauvegardées</span>
+            </div>
+            
+            <div class="stat-item">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Plateformes</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-over-hero">
+        <a href="dashboard.html" class="link_btn">
+            <i class="fa-solid fa-shield-halved"></i>
+            Sauvegarder une publication
+        </a>
+    </div>
+
+    <script>
+        const posts = JSON.parse(localStorage.getItem('safepost_posts') || '[]');
+        document.getElementById('totalPosts').textContent = posts.length;
+    </script>     
+</body>
+</html>
+
+

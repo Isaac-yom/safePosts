@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Publications - SafePost</title>
+
+    
+    <meta name="description" content="SafePost vous permet de sauvegarder et organiser vos publications Facebook, Instagram, TikTok et autres réseaux sociaux afin de ne jamais perdre votre contenu.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="SafePost – Sauvegardez vos publications">
+    <meta property="og:description" content="Protégez vos publications avant qu’elles ne disparaissent. SafePost vous aide à sauvegarder et retrouver facilement vos contenus des réseaux sociaux.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://safepost.vercel.app">
+
+    <link rel="icon" href="https://www.svgrepo.com/show/475656/shield-lock.svg" type="image/svg+xml">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" type="image/png">
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body x-data="publicationsApp()" x-init="init()">
+
+    <header class="header">
+        <div class="header-content">
+            <a href="index2.html" class="logo">SafePost</a>
+            <nav class="nav">
+                <a href="dashboard.html" class="nav-link">Tableau de bord</a>
+                <a href="publications.html" class="nav-link active">Mes publications</a>
+            </nav>
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="mobile-nav" id="mobileNav">
+            <a href="dashboard.html" class="mobile-nav-link">Tableau de bord</a>
+            <a href="publications.html" class="mobile-nav-link active">Mes publications</a>
+        </div>
+    </header>
+
+    <div class="container">
+       
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Mes Publications</h1>
+                <p class="page-subtitle">Gérez et consultez toutes vos publications sauvegardées</p>
+            </div>
+            <a href="dashboard.html" class="btn-primary">
+                <i class="fa-solid fa-plus"></i>
+                Nouvelle publication
+            </a>
+        </div>
+
+        <div class="success-message" x-show="successMessage" x-text="successMessage"></div>
+
+        <div class="card">
+            <div class="search-filter-row">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="Rechercher dans vos publications..."
+                    x-model="searchQuery"
+                >
+                <select class="form-select" x-model="filterPlatform" style="max-width: 200px;">
+                    <option value="">Toutes les plateformes</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="tiktok">TikTok</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="posts-grid" x-show="filteredPosts.length > 0">
+            <template x-for="post in filteredPosts" :key="post.id">
+                <div class="post-card">
+                  
+                    <div class="post-media" x-show="post.images && post.images.length > 0">
+                        <img :src="post.images[0]" alt="Post image">
+                    </div>
+
+                    <template x-if="post.video">
+                        <div class="post-media">
+                            <video :src="post.video" controls></video>
+                        </div>
+                    </template>
+
+                    <div class="post-content">
+                        <span class="post-platform" :class="post.platform" x-text="post.platform.toUpperCase()"></span>
+                        
+                        <p class="post-text" x-text="post.text"></p>
+                        
+                        <div class="post-meta">
+                            <span class="post-date" x-text="formatDate(post.date)"></span>
+                            <div class="post-actions">
+                                <button class="btn-action btn-view" @click="viewPost(post)">
+                                    <i class="fa-solid fa-eye"></i>
+                                    Voir
+                                </button>
+                                <button class="btn-action btn-delete" @click="deletePost(post.id)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </template>
+        </div>
+
+        <div class="empty-state" x-show="userPosts.length === 0">
+            <div class="empty-icon">
+                <i class="fa-solid fa-box-archive"></i>
+            </div>
+            <h3>Aucune publication sauvegardée</h3>
+            <p>Commencez à sauvegarder vos publications pour ne jamais les perdre !</p>
+            <a href="dashboard.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">
+                Créer ma première sauvegarde
+            </a>
+        </div>
+
+        <div class="empty-state" x-show="userPosts.length > 0 && filteredPosts.length === 0">
+            <div class="empty-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3>Aucun résultat trouvé</h3>
+            <p>Essayez une autre recherche ou changez le filtre de plateforme</p>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" :class="{ 'active': viewingPost }">
+        <div class="modal-content" x-show="viewingPost">
+            <button class="modal-close" @click="viewingPost = null">×</button>
+            
+            <template x-if="viewingPost">
+                <div>
+                    <span class="post-platform" :class="viewingPost.platform" x-text="viewingPost.platform.toUpperCase()"></span>
+                    
+                    <template x-if="viewingPost.images && viewingPost.images.length > 0">
+                        <div>
+                            <template x-for="img in viewingPost.images" :key="img">
+                                <img :src="img" alt="Post image" class="modal-image">
+                            </template>
+                        </div>
+                    </template>
+
+                    <div x-show="viewingPost.video">
+                        <video :src="viewingPost.video" controls class="modal-video"></video>
+                    </div>
+                    
+                    <p class="modal-text" x-text="viewingPost.text"></p>
+                    
+                    <div class="post-meta">
+                        <span class="post-date" x-text="formatDate(viewingPost.date)"></span>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                Conçu avec passion par 
+                <a href="https://isaac-myportfolio.yomservice.com" target="_blank" rel="noopener noreferrer" class="footer-link">Isaac Yom</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="publications.js"></script>
+    <script>
+        function toggleMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            const mobileNav = document.getElementById('mobileNav');
+            hamburger.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
