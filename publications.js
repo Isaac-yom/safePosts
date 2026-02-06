@@ -1,6 +1,5 @@
 function publicationsApp() {
     return {
-        currentUser: null,
         userPosts: [],
         searchQuery: '',
         filterPlatform: '',
@@ -8,41 +7,37 @@ function publicationsApp() {
         successMessage: '',
 
         init() {
-        
-            const savedUser = localStorage.getItem('safepost_currentUser');
-            if (!savedUser) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            this.currentUser = JSON.parse(savedUser);
             this.loadUserPosts();
-            console.log('Publications loaded for:', this.currentUser.name);
+            console.log('Publications app initialized');
         },
 
         loadUserPosts() {
-            const allPosts = JSON.parse(localStorage.getItem('safepost_posts') || '[]');
-            this.userPosts = allPosts
-                .filter(p => p.userId === this.currentUser.id)
-                .sort((a, b) => new Date(b.date) - new Date(a.date)); 
-            
-            console.log('User posts:', this.userPosts.length);
+            const allPosts = JSON.parse(
+                localStorage.getItem('safepost_posts') || '[]'
+            );
+
+            this.userPosts = allPosts.sort(
+                (a, b) => new Date(b.date) - new Date(a.date)
+            );
+
+            console.log('Total posts:', this.userPosts.length);
         },
 
         get filteredPosts() {
             let posts = this.userPosts;
 
-          
             if (this.filterPlatform) {
-                posts = posts.filter(p => p.platform === this.filterPlatform);
+                posts = posts.filter(
+                    p => p.platform === this.filterPlatform
+                );
             }
 
-          
-            if (this.searchQuery && this.searchQuery.trim() !== '') {         
+            if (this.searchQuery.trim() !== '') {
                 const query = this.searchQuery.toLowerCase();
-                posts = posts.filter(p => 
+
+                posts = posts.filter(p =>
                     p.text.toLowerCase().includes(query) ||
-                    p.platform.toLowerCase().includes(query)            
+                    p.platform.toLowerCase().includes(query)
                 );
             }
 
@@ -50,8 +45,7 @@ function publicationsApp() {
         },
 
         formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR', {
+            return new Date(dateString).toLocaleDateString('fr-FR', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
@@ -62,28 +56,28 @@ function publicationsApp() {
 
         viewPost(post) {
             this.viewingPost = post;
-            console.log('Viewing post:', post.id);
         },
 
         deletePost(postId) {
-            if (!confirm('Êtes-vous sûr de vouloir supprimer cette publication ?')) {
-                return;
-            }
+            if (!confirm('Supprimer cette publication ?')) return;
 
-     
-            const allPosts = JSON.parse(localStorage.getItem('safepost_posts') || '[]');
-            const filteredPosts = allPosts.filter(p => p.id !== postId);
-            localStorage.setItem('safepost_posts', JSON.stringify(filteredPosts));
+            const allPosts = JSON.parse(
+                localStorage.getItem('safepost_posts') || '[]'
+            );
 
-        
+            const updatedPosts = allPosts.filter(p => p.id !== postId);
+            localStorage.setItem(
+                'safepost_posts',
+                JSON.stringify(updatedPosts)
+            );
+
             this.loadUserPosts();
 
-       
-            this.successMessage = '🗑️ Publication supprimée avec succès';
+            this.successMessage = 'Publication supprimée';
             setTimeout(() => this.successMessage = '', 3000);
-
-            console.log('Post deleted:', postId);
-        },
+        }
     }
-} 
+}
+
+
 
