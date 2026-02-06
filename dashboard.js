@@ -1,6 +1,5 @@
 function dashboardApp() {
     return {
-        currentUser: null,
         userPosts: [],
         newPost: {
             platform: 'facebook',
@@ -11,22 +10,16 @@ function dashboardApp() {
         successMessage: '',
 
         init() {
-      
-            const savedUser = localStorage.getItem('safepost_currentUser');
-            if (!savedUser) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            this.currentUser = JSON.parse(savedUser);
             this.loadUserPosts();
-            console.log('Dashboard loaded for:', this.currentUser.name);
+            console.log('Dashboard loaded (no login system)');
         },
 
         loadUserPosts() {
-            const allPosts = JSON.parse(localStorage.getItem('safepost_posts') || '[]');
-            this.userPosts = allPosts.filter(p => p.userId === this.currentUser.id);
-            console.log('User posts:', this.userPosts.length);
+            const allPosts = JSON.parse(
+                localStorage.getItem('safepost_posts') || '[]'
+            );
+            this.userPosts = allPosts;
+            console.log('Posts loaded:', this.userPosts.length);
         },
 
         handleImageSelect(event) {
@@ -35,14 +28,21 @@ function dashboardApp() {
 
             Array.from(files).forEach(file => {
                 if (file.size > 10 * 1024 * 1024) {
-                    alert('Image trop volumineuse : ' + file.name + ' (max 10MB)');
+                    alert(
+                        'Image trop volumineuse : ' +
+                        file.name +
+                        ' (max 10MB)'
+                    );
                     return;
                 }
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     this.newPost.images.push(e.target.result);
-                    console.log('Image added, total:', this.newPost.images.length);
+                    console.log(
+                        'Image added, total:',
+                        this.newPost.images.length
+                    );
                 };
                 reader.readAsDataURL(file);
             });
@@ -55,7 +55,9 @@ function dashboardApp() {
             console.log('Video selected:', file.name);
 
             if (file.size > 100 * 1024 * 1024) {
-                alert('Vidéo trop volumineuse (max 100MB). Pour les grosses vidéos, sauvegardez-les d\'abord sur votre téléphone.');
+                alert(
+                    "Vidéo trop volumineuse (max 100MB)."
+                );
                 return;
             }
 
@@ -74,7 +76,8 @@ function dashboardApp() {
 
         removeVideo() {
             this.newPost.video = null;
-            document.getElementById('videoInput').value = '';
+            const input = document.getElementById('videoInput');
+            if (input) input.value = '';
             console.log('Video removed');
         },
 
@@ -88,7 +91,6 @@ function dashboardApp() {
 
             const post = {
                 id: Date.now(),
-                userId: this.currentUser.id,
                 platform: this.newPost.platform,
                 text: this.newPost.text,
                 images: [...this.newPost.images],
@@ -96,24 +98,30 @@ function dashboardApp() {
                 date: new Date().toISOString()
             };
 
-        
-            const allPosts = JSON.parse(localStorage.getItem('safepost_posts') || '[]');
+            const allPosts = JSON.parse(
+                localStorage.getItem('safepost_posts') || '[]'
+            );
             allPosts.push(post);
-            localStorage.setItem('safepost_posts', JSON.stringify(allPosts));
+            localStorage.setItem(
+                'safepost_posts',
+                JSON.stringify(allPosts)
+            );
 
             console.log('Post saved:', post);
 
-      
-            this.successMessage = '✅ Publication sauvegardée avec succès !';
+            this.successMessage =
+                'Publication sauvegardée avec succès !';
 
-          
             setTimeout(() => {
                 window.location.href = 'publications.html';
             }, 1000);
         },
 
         videoDisabledAlert() {
-            alert("La fonctionnalité vidéo est actuellement en cours de développement. Elle sera disponible très prochainement.");
+            alert(
+                "La fonctionnalité vidéo est actuellement en cours de développement. Elle sera disponible très prochainement."
+            );
         }
-    }
-}  
+    };
+}
+
