@@ -754,6 +754,12 @@ body {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.footer-paragraphe {
+    margin: 1rem 0;
+    color: white;
+    font-size: 0.89rem;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .container {
@@ -803,6 +809,7 @@ body {
 
 }
  
+
 
 
 
