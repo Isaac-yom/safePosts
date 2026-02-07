@@ -792,5 +792,15 @@ body {
     .footer-text {
         font-size: 0.9rem;
     }
+
+    .post-date {
+        display: inline-block;
+    }
+
+    .page-title {
+        font-size: 1rem;
+    }
+
 }
  
+
