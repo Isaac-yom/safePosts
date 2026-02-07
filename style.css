@@ -793,8 +793,8 @@ body {
         font-size: 0.9rem;
     }
 
-    .post-date {
-        flex-wrap: wrap;
+    .logo {
+        font-size: 1.6rem;
     }
 
     .page-title {
@@ -803,6 +803,7 @@ body {
 
 }
  
+
 
 
 
