@@ -794,7 +794,7 @@ body {
     }
 
     .post-date {
-        display: inline-block;
+        flex-wrap: wrap;
     }
 
     .page-title {
@@ -803,5 +803,6 @@ body {
 
 }
  
+
 
 
