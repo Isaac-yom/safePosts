@@ -241,7 +241,7 @@ body {
 .card-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--dark);
+    color: #1E40AF;
     margin-bottom: 1.5rem;
 }
 
@@ -808,6 +808,7 @@ body {
 
 }
  
+
 
 
 
