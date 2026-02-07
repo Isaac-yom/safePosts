@@ -194,7 +194,7 @@ body {
 
 .stat-card {
     background: var(--white);
-    border: 1px solid var(--border);
+    border: 1px solid #1E40AF;
     border-radius: 12px;
     padding: 1.5rem;
     display: flex;
@@ -211,7 +211,6 @@ body {
 .stat-icon {
     width: 60px;
     height: 60px;
-    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -450,7 +449,7 @@ body {
 
 .post-card {
     background: var(--white);
-    border: 1px solid var(--border);
+    border: 1px solid #1E40AF;
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -809,6 +808,7 @@ body {
 
 }
  
+
 
 
 
